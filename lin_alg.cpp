@@ -2,36 +2,81 @@
 using namespace std;
 
 struct object{
-    int size;
-    int pos_vec[3] = {0,0,0};  // the point in 3d space that the object is
-    int motion_vec[3] = {0,0,0}; // the x,y,z velocity componets of the object
-    int accel_vec[3] = {0,0,0}; // the x,y,z 
-    int force_vec[3] = {0,0,0};
-    int mass;
+    float size = 1;
+    float pos_vec[3] = {0,0,0};  // the point in 3d space that the object is
+    float motion_vec[3] = {0,0,0}; // the x,y,z velocity componets of the object
+    float accel_vec[3] = {0,0,0}; // the x,y,z 
+    //float force_vec[3] = {0,0,0};
+    int mass = 1;
+    int dimension = 2;
 };
 
-void  find_pos(object &circ, int time_step){
-    for(int i = 0; i < 3; i++){
-
-        circ.pos_vec[i] = circ.pos_vec[i] + (circ.motion_vec[i] * time_step) + (((float)circ.accel_vec[i] * time_step *time_step)/2);
-        circ.motion_vec[i] = circ.motion_vec[i] + (circ.accel_vec[i] * time_step);
+void find_pos(object &ob, float time_step){
+    for(int i = 0; i < ob.dimension; i++){
+        ob.pos_vec[i] = ob.pos_vec[i] + (ob.motion_vec[i] * time_step) +((0.5f)*(ob.accel_vec[i] * time_step * time_step));
+        ob.motion_vec[i] = ob.motion_vec[i] + (ob.accel_vec[i] * time_step);
+        
     }
 }
+void add_force(object &ob, float forces[3]){
+    for(int i =0; i < ob.dimension; i++){
 
-void display_pos(object circ){
-    cout << "{" << circ.pos_vec[0] << "," << circ.pos_vec[1] << "," << circ.pos_vec[2] << "}"  << endl;
+        ob.accel_vec[i] += forces[i]/ob.mass; 
+    }
 }
+void display_pos(object ob){
+    cout << "pos {";
+    for(int i =0; i < ob.dimension-1; i++){
+        cout << ob.pos_vec[i] << ",";
+    }
+    cout << ob.pos_vec[ob.dimension-1] << "}" << endl;
+}
+void display_velocity(object ob){
+    cout << "velocity {";
+    for(int i =0; i < ob.dimension-1; i++){
+        cout << ob.motion_vec[i] << ",";
+    }
+    cout << ob.motion_vec[ob.dimension-1] << "}" << endl;
+}
+void display_accel(object ob){
+    cout << "accel {";
+    for(int i =0; i < ob.dimension-1; i++){
+        cout << ob.accel_vec[i] << ",";
+    }
+    cout << ob.accel_vec[ob.dimension-1] << "}" << endl;
+}
+
+// to add collison detection we are going to use a pointer or an array to represent position
+// could we represent each objects using a matrix, with either equations or actualy values, and finding the relative normal plane
+// is it possible to constrain the plane by a set of matrices 
+// from that we can do a quick test for intersections to tell if the objects are colliding. We can ignore checks for static objects
+// and just focus on the moving objects in any given scene.
 
 int main(){
     object ob1;
-    for(int i = 0; i < 2; i ++){
-        ob1.accel_vec[i] = 1;
-    }
-    int time_step = 1;
-    int total_time = 0;
-    while(total_time <= 10){
-        find_pos(ob1, time_step);
+    float force_vec[3] = {0,0,0};
+    float time_step = 1.f;
+    float total_time = 0.f;
+    display_pos(ob1);
+    /*
+    while(true){
+        cout << "Apply Force" << endl;
+        cout << "X component" << endl;
+        cin >> force_vec[0];
+        cout << "Y component" << endl;
+        cin >> force_vec[1];
+        cout << "Z component" << endl;
+        cin >> force_vec[2];
+        add_force(ob1, force_vec);
+        while(total_time < 10){
+            find_pos(ob1, time_step);
+            total_time += time_step;
+        }
         display_pos(ob1);
-        total_time += time_step;
+        display_velocity(ob1);
+        display_accel(ob1);
+        total_time = 0;
     }
+    */
+
 }
