@@ -47,8 +47,7 @@ void display_accel(object ob){
 }
 
 // to add collison detection we are going to use a pointer or an array to represent position
-// could we represent each objects using a matrix, with either equations or actualy values, and finding the relative normal plane
-// is it possible to constrain the plane by a set of matrices 
+// could we represent each objects using a matrix, with either equations or actualy values, we can create a disc or line (3d vs 2d) the lenght of which can be used to tune fedelity  
 // from that we can do a quick test for intersections to tell if the objects are colliding. We can ignore checks for static objects
 // and just focus on the moving objects in any given scene.
 
